@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+    <style>
+        #chat-box {
+            width: 400px;
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<script src="//cdn.jsdelivr.net/npm/protobufjs@7.X.X/dist/protobuf.js"></script>
+<script>
+    function joinToChat() {
+        console.log(roomID.value)
+        var wsUri = "ws://localhost:8080/Chat_war/chat/" + roomID.value;
+        writeToScreen("connecting to room : " + roomID.value + " ...")
+        websocket = new WebSocket(wsUri);
+        websocket.onopen = function (evt) {
+            writeToScreen("connected !")
+        };
+        websocket.onmessage = function (event) {
+            var message = event.data;
+            console.log(message + " hahaha ")
+            writeToScreen(message)
+        };
+    }
+
+    websocket.onmessage = function (event) {
+        var message = event.data;
+        writeToScreen(message)
+    };
+
+    websocket.onerror = function (error) {
+        console.error("WebSocket error:", error);
+    };
+
+    websocket.onclose = function (event) {
+        console.log("WebSocket connection closed.");
+    };
+
+    function sendMessage() {
+        var messageInput = document.getElementById("message-input");
+        var message = messageInput.value;
+        websocket.send(message);
+        messageInput.value = "";
+    }
+
+    function writeToScreen(mess) {
+        var chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML += "<p>" + mess + "</p>";
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+
+</script>
+<script>
+    import protobuf from "protobufjs";
+
+    protobuf.load("mess.proto",function (error, root){
+        if (err) throw err;
+        var message = root.lookupType("proto.ChatMessage")
+    })
+</script>
+<body>
+<h1>Server room</h1>
+
+<div style="text-align: left;">
+    <form action="">
+        <input onclick="joinToChat()" value="Press to join"
+               type="button">
+        <input id="roomID" name="message" value="roomID"
+               type="text">
+        <br>
+    </form>
+</div>
+<div id="output"></div>
+
+
+<h1>WebSocket Chat</h1>
+<div id="chat-box"></div>
+<input type="text" id="message-input" placeholder="Type your message...">
+<button onclick="sendMessage()">Send</button>
+<button onclick="exit()">exit</button>
+</body>
+</html>
