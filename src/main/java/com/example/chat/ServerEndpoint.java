@@ -42,8 +42,8 @@ public class ServerEndpoint {
         }
     }
     @OnMessage
-    public String echo(String message) {
-       return "echo: " + message;
+    public String echo(Session session, String message) {
+       return "echo: " + message + session.getId();
     }
 
 }

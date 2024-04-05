@@ -38,11 +38,11 @@ public class ChatEndpoint {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         System.out.println("Message from " + session.getId() + ": " + message);
-        Mess.ChatMessage mess = Mess.ChatMessage.newBuilder()
-                .setMess("tao la hoang hai")
-                .setDate("23/3")
-                .setName("Hai")
-                .build();
+//        Mess.ChatMessage mess = Mess.ChatMessage.newBuilder()
+//                .setMess("tao la hoang hai")
+//                .setDate("23/3")
+//                .setName("Hai")
+//                .build();
         notifyAllPeers((String) session.getUserProperties().get("roomId"),session.getId() + ": " + message);
         if (message.equals("all")) {
             session.getBasicRemote().sendText("All users: " + peers.size());

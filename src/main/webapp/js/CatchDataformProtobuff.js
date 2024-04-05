@@ -1,5 +1,7 @@
 const protobuf = require("protobufjs");
+function toChatMessageProto(payload) {
 
+}
 
 protobuf.load("mess.proto",function (error, root) {
     if (error) throw error;
